@@ -15,19 +15,26 @@ for i=1:5
             x(curPoint)=(j-1)+(j-(j-1)).*rand(1, 1);
             %x=((i-(i-1)).*rand(peopleDensity(i,j)+i,1);
             %y=(j-(j-1)).*rand(peopleDensity(i,j)+j,1);
-            fprintf("(%d,%d)\n",x(k),y(k));
+            %fprintf("(%d,%d)\n",x(k),y(k));
             curPoint = curPoint+1;
             
         end
        
       
-        plot(x,y,'.');  
+        %plot(x,y,'.');  
     end
 end
 
 x=reshape(x,[825,1]);
 y=reshape(y,[825,1]);
 points=horzcat(x,y);
-
 set(gca, 'YDir','reverse')
 title("Airport distribution")
+
+
+
+save pos.mat points
+
+clear points
+% Load them again
+load pos.mat
