@@ -1,0 +1,24 @@
+%{
+%I'm really not sure how the agentPoints function works but I did this as good as I can until I find out how that function is set up.
+%INPUTS agentpoints- which points are given to which agents   mass-mass of each aggent's points  density- density of population in each area of matrix  agentposition, and partitions
+%OUTPUT array of x,y coordinates of center of points. [(x,y),(x,y)] where each x,y represents a section that is dedicated to the individual agent
+
+function centroids = calcCentroids(agentPoints, mass, density, agentPositions, partitions)
+centroids = ageentPositions;  %Assigning size -> feel free to change if you know a better way (errors were runing for no size set)
+
+%for loop runing through agents were i represents the agent number
+for i=1:size(agentPositions,1)
+    centroids(i)=[0,0];    %set location to zero
+    
+    %loop runing through partitions
+    for k= 1:partitions
+       %is the agent responsible for given partition
+       if(agentPoints(i,k)>0)
+           centroids(i, 1)= centroids(i, 1)+(agentPoints(i,k,1)*density(i,k,1));  %add x value*weight
+           centroids(i, 2)= centroids(i, 2)+(agentPoints(i,k,2)*density(i,k,2));  %add y value*weight
+       end
+    end
+    centroids(i, 1)=centroids(i, 1)/mass(i); %divide x by total weight
+    centroids(i, 2)=centroids(i, 2)/mass(i); %divide y by total weight
+end
+%}
