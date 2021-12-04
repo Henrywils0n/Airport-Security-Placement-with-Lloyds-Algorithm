@@ -1,26 +1,5 @@
 function [agentPositions, distanceTravelled, energy] = moveAgents(agentPositions,...
     centroids, sides, dt, energy, velocityType, maxVelocity, scaleFactor)
-
-orientation = centroids - agentPositions;
-magOrientation = vecnorm(orientation,2,2);
-orientation = bsxfun(@rdivide, orientation, magOrientation(:));
-orientation(isnan(orientation)) = 0;
-
-if strcmp(velocityType, 'Constant Velocity')
-    velocity = maxVelocity;
-else
-    velocity = magnitude*scaleFactor;
-    velocity(velocity>maxVelocity) = maxVelocity;
-    velocity(isnan(velocity)) = 0;
-end
-deltaPosition = velocityFunction(orientation, velocity, dt);
-deltaPosition(agentPositions+deltaPositions>sides) = 0;
-deltaPosition(agentPositions+deltaPositions<0) = 0;
-agentPositions = agentPositions + deltaPosition;
-deltaEnergy = energyfunction(velocity, deltaPosition, dt);
-energy = energy + deltaEnergy;
-distanceTravelled = sum(vecnorm(deltaPosition,2,2));
-
 %% moveAgents
 % Moves each agent towards its assigned centroid. Must ensure agents don't
 % move out of bounds.
@@ -53,3 +32,35 @@ distanceTravelled = sum(vecnorm(deltaPosition,2,2));
 %     n-by-1 vector of distance travelled by each agent this iteration
 %   energy
 %     n-by-1 vector of agent energy after moving
+
+% Agents move towards centroids
+direction = centroids - agentPositions;
+% Calculate the 2-norm of direction accross rows
+magnitude = vecnorm(direction,2,2);
+% Scale directions by the corresponding magnitudes
+direction = bsxfun(@rdivide,direction,magnitude(:));
+% Filter any NaN directions to 0
+direction(isnan(direction)) = 0;
+% Determine magnitudes of velocities
+if strcmp(velocityType, 'Constant Velocity')
+    velocity = maxVelocity;
+else
+    velocity = magnitude*scaleFactor;
+    % Filter any velocities > maxVelocity
+    velocity(velocity>maxVelocity) = maxVelocity;
+    % Filter any NaN velocities to 0
+    velocity(isnan(velocity)) = 0;
+end
+% Get the change in position from velocityFunction
+deltaPosition = velocityFunction(direction, velocity, dt);
+% Make sure agents aren't out of bounds by reducing deltaPosition
+deltaPosition(agentPositions+deltaPosition>sides) = 0;
+deltaPosition(agentPositions+deltaPosition<0) = 0;
+% Update agentPositions
+agentPositions = agentPositions + deltaPosition;
+% Get the change in energy from energyFunction
+deltaEnergy = energyFunction(velocity, deltaPosition, dt);
+% Update energy
+energy = energy + deltaEnergy;
+% Calculate the norm of changes in position and sum to get net distance
+distanceTravelled = sum(vecnorm(deltaPosition,2,2));

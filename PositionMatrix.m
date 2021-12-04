@@ -45,16 +45,17 @@ peopleDensity8=[15 15 15 15 15 30 150 0 0 0 0 0 0 0 0 0 0;
                15 15 15 15 15 15 15 30 135 60 30 15 15 15 15 15 15;
                0 0 0 0 0 0 0 0 15 15 15 15 15 15 15 15 15;
                0 0 0 0 0 0 0 0 0 15 15 15 15 15 15 15 15];
+           
+count=1;
 
-
-den1=points(peopleDensity1,1);
-den2=points(peopleDensity2,2);
-den3=points(peopleDensity3,3);
-den4=points(peopleDensity4,4);
-den5=points(peopleDensity5,5);
-den6=points(peopleDensity6,6);
-den7=points(peopleDensity7,7);
-den8=points(peopleDensity8,8);
+den1=points(peopleDensity1,count);
+den2=points(peopleDensity2,count);
+den3=points(peopleDensity3,count);
+den4=points(peopleDensity4,count);
+den5=points(peopleDensity5,count);
+den6=points(peopleDensity6,count);
+den7=points(peopleDensity7,count);
+den8=points(peopleDensity8,count);
  
 %save density2.mat den2 
 % % 
@@ -62,7 +63,7 @@ den8=points(peopleDensity8,8);
 % % % Load them again
 %load points2.mat
 
-function d= points(density, plotspace) 
+function d= points(density, count) 
 curPoint=1;
 totalP=sum(density,'all');
 fprintf("total people: %d\n",totalP);
@@ -70,14 +71,14 @@ fprintf("total people: %d\n",totalP);
 for i=1:5
     for j=1:17
         for k=1:density(i,j)
-            y(curPoint)=(5-(i-1)+(i-(i-1)).*rand(1, 1));
+            y(curPoint)=(4-(i-1)+(i-(i-1)).*rand(1, 1));
             x(curPoint)=(j-1)+(j-(j-1)).*rand(1, 1);
             curPoint = curPoint+1;
         end
-        
-        subplot(8,1,plotspace); 
-        title(sprintf('Population Distribution %d vs Time',plotspace-1))
-        plot(x,y,'.');
+        title(sprintf('Population Distribution %d vs Time',count))
+        subplot(4,2,count); 
+        plot(y,x,'.');
+        count=count+1;
        
 
     end
@@ -92,11 +93,11 @@ for m=1:10
         xs=[n-1;n];
         ys=[m-1;m];
         in = inpolygon(x,y,xs,ys);
-        fprintf("%d\t",numel(x(in)));
+        %fprintf("%d\t",numel(x(in)));
         d(m,n)=numel(x(in))/totalP;
         
       end
-        fprintf("\n");
+        %fprintf("\n");
     
 end
 

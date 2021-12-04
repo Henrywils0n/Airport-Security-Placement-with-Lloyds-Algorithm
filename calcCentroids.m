@@ -26,7 +26,7 @@ centroidSum = zeros(numAgents,2);
 % For each agent
 for i = 1:numAgents
     % For each point in the region
-    for j = 1:size(agentPoints{i})%,1
+    for j = 1:size(agentPoints{i},1)%,1
         % Calculate actual position and sum density
         pos = agentPoints{i}(j,:);
         D = (pos*partitions);%floor?
